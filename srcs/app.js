@@ -5,9 +5,10 @@ const cors = require('cors')
 
 //* require server
 const router = require('./routers/router')
+require('./configs/databases')
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 //* config
 app.use(cors())
