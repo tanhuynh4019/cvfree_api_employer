@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 const { isEmail } = require('validator')
 
 const { REQUIRED, INVALID } = require('../modules/message.module')
@@ -32,30 +33,35 @@ const employerSchema = mongoose.Schema({
     gender: {
         type: String,
         required: REQUIRED('Giới tính', true),
-        enum: ['Nam', 'Nữ'],
-
+        enum: ['Nam', 'Nữ']
     },
     company: {
         type: String,
-        require: true
+        required: REQUIRED('Tên công ty', true)
     },
     position: {
         type: String,
-        require: true
+        required: REQUIRED('Vị trí công tác', true)
     },
     workLocation: {
         type: String,
-        require: true
+        required: REQUIRED('Tỉnh/Thành phố', true)
     },
     district: {
         type: String,
-        require: true
+        required: REQUIRED('Quận/Huyện', true)
+    },
+    ward: {
+        type: String,
+        required: REQUIRED('Xã', true)
     },
     accountSkype: {
-        type: String
+        type: String,
+        match: [regexModule.new.phone_vn, INVALID('Tài khoản skype')]
     },
     accountZalo: {
-        type: String
+        type: String,
+        match: [regexModule.new.phone_vn, INVALID('Số điện thoại Zalo')]
     },
     isTeamOfService: {
         type: Boolean
@@ -70,7 +76,7 @@ const employerSchema = mongoose.Schema({
     },
     isAccept: {
         type: Boolean,
-        required: true
+        default: true
     },
     isBin: {
         type: Boolean,
@@ -84,7 +90,14 @@ const employerSchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     },
+    dateAllowChangePassword: {
+        type: Date
+    },
     dateCreate: {
+        type: Date,
+        default: Date.now()
+    },
+    dateChangePassword: {
         type: Date,
         default: Date.now()
     },
@@ -95,12 +108,15 @@ const employerSchema = mongoose.Schema({
     avatar: {
         type: Object,
         default: {
-            filename: '/avatar.png'
+            filename: 'avatar.png'
         }
     },
     member: {
         type: Number,
         default: 1
+    },
+    numberErrorChangePassword: {
+        type: Number
     },
     vipTopMax: {
         type: Object,
@@ -159,4 +175,15 @@ const employerSchema = mongoose.Schema({
         }
     },
 })
+
+
+employerSchema.methods.isValidPassword = async function(newPassword) {
+    try {
+        return await bcrypt.compare(newPassword, this.password);
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+
 module.exports = mongoose.model('Employer', employerSchema);
