@@ -17,6 +17,8 @@ app.use(express.urlencoded({
     extended: true
 }))
 
+app.use('', express.static(__dirname + '/uploads'))
+
 //* router
 router(app)
 

@@ -2,7 +2,7 @@ const express = require('express')
 const multer = require('multer')
 const passport = require('passport')
 
-require('../../middlewares/passport')
+require('../../middlewares/passport.middleware')
 
 const { uploadImage } = require('../../utils/multer.ultil')
 

@@ -117,6 +117,30 @@ const schemas = {
             'string.empty': EMPTY('Xác nhận mật khẩu'),
         }),
         isLogOut: Joi.boolean().default(false).messages(),
+    }),
+    authEditInfoSchema: Joi.object().keys({
+        fullname: Joi.string().min(3).max(50).empty().required().messages({
+            'any.required': REQUIRED('Họ và tên', true),
+            'string.empty': EMPTY('Họ và tên'),
+            'string.min': 'Họ và tên phải trên {{#limit}} ký tự!',
+            'string.max': 'Họ và tên không vượt quá {{#limit}} ký tự!'
+        }),
+        gender: Joi.string().valid('Nam', 'Nữ').empty().required().messages({
+            'any.required': REQUIRED('Giới tính', true),
+            'string.empty': EMPTY('Giới tính'),
+            'any.only': INVALID('Giới tính'),
+        }),
+        position: Joi.string().valid('Nhân viên', 'Trưởng nhóm', 'Phó phòng', 'Trưởng phòng', 'Phó giám đốc', 'Giám đốc', 'Tổng giám đốc').empty().required().messages({
+            'any.required': REQUIRED('Vị trí công tác', true),
+            'string.empty': EMPTY('Vị trí công tác'),
+            'any.only': INVALID('Vị trí công tác'),
+        }),
+        accountSkype: Joi.string().allow(null, '').pattern(new RegExp(regexModule.new.phone_vn)).messages({
+            'string.pattern.base': INVALID('Tài khoản skype'),
+        }),
+        accountZalo: Joi.string().allow(null, '').pattern(new RegExp(regexModule.new.phone_vn)).messages({
+            'string.pattern.base': INVALID('Số điện thoại Zalo'),
+        }),
     })
 }
 

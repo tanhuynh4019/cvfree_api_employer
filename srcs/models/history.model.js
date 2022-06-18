@@ -21,6 +21,10 @@ const historySchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    role: {
+        type: Number,
+        required: true
+    },
     type: {
         type: Number,
         required: true

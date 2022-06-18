@@ -34,7 +34,7 @@ const register = async(body, query, ip) => {
 
         //* send slack and save history
         sendHistorySlack(`Nhà tuyển dụng *${create.email} - ${create.phone} - #${create._id}* vừa tạo tài khoản nhà tuyển dụng vào lúc ${formatDate_VN(create.dateCreate)}`)
-        historyService.create({ idEmployer: create._id, content: 'Đăng ký', ip, type: typeModule.HISTORY.EMPLOYER })
+        historyService.create({ idEmployer: create._id, content: 'Đăng ký', ip, type: typeModule.HISTORY.ACCOUNT, role: typeModule.ROLE.EMPLOYER })
 
         setMessage('Đăng ký thành công!')
         return {
@@ -61,10 +61,12 @@ const login = async(query, user, ip) => {
         const createToken = await endcodedToken(user._id)
 
         //* send slack and save history
-        historyService.create({ idEmployer: user._id, content: 'Đăng nhập', ip, type: typeModule.HISTORY.EMPLOYER })
+        historyService.create({ idEmployer: user._id, content: 'Đăng nhập', ip, type: typeModule.HISTORY.ACCOUNT, role: typeModule.ROLE.EMPLOYER })
         sendHistorySlack(`Nhà tuyển dụng *${user.email} - ${user.phone} - #${user._id}* vừa đăng nhập vào lúc ${formatDate_VN(Date.now())}`)
 
         setMessage('Đăng nhập thành công!')
+
+
         return {
             token: createToken
         }
@@ -160,7 +162,7 @@ const changePassword = async(body, query, user, ip) => {
         let createToken
 
         //* send slack and save history
-        historyService.create({ idEmployer: edit._id, content: 'Đổi mật khẩu', ip, type: typeModule.HISTORY.EMPLOYER })
+        historyService.create({ idEmployer: edit._id, content: 'Đổi mật khẩu', ip, type: typeModule.HISTORY.ACCOUNT, role: typeModule.ROLE.EMPLOYER })
         sendHistorySlack(`Nhà tuyển dụng *${edit.email} - ${edit.phone} - #${edit._id}* vừa đổi mật khẩu vào lúc ${formatDate_VN(dateNow)}`)
 
         if (isLogOut) {
@@ -188,11 +190,33 @@ const logOut = async(query, user, ip) => {
     }
 
     //* send slack and save history
-    historyService.create({ idEmployer: user._id, content: 'Đăng xuất', ip, type: typeModule.HISTORY.EMPLOYER })
+    historyService.create({ idEmployer: user._id, content: 'Đăng xuất', ip, type: typeModule.HISTORY.ACCOUNT, role: typeModule.ROLE.EMPLOYER })
     sendHistorySlack(`Nhà tuyển dụng *${user.email} - ${user.phone} - #${user._id}* vừa đăng xuất vào lúc ${formatDate_VN(dateNow)}`)
 
     setMessage('Đăng xuất thành công!')
     return { token: null }
+}
+
+const editInfo = async(body, query, user, ip) => {
+    const { key } = query
+    const dateNow = Date.now()
+
+    //* validate
+    if (key != keyModule.SERVICE.AUTH) {
+        setMessage(INCORRECT('Key'))
+        return false
+    }
+
+    //* perform
+    body.dateEdit = dateNow
+    const edit = await employerModel.findByIdAndUpdate(user._id, body)
+
+    //* send slack and save history
+    historyService.create({ idEmployer: edit._id, content: 'Cập nhật thông tin', ip, type: typeModule.HISTORY.ACCOUNT, role: typeModule.ROLE.EMPLOYER })
+    sendHistorySlack(`Nhà tuyển dụng *${edit.email} - ${edit.phone} - #${edit._id}* vừa cập nhật thông tin vào lúc ${formatDate_VN(dateNow)}`)
+
+    setMessage('Cập nhật thông tin thành công!')
+    return {}
 }
 
 const getMessage = () => {
@@ -209,5 +233,6 @@ module.exports = {
     secret,
     changePassword,
     getMessage,
-    logOut
+    logOut,
+    editInfo
 }

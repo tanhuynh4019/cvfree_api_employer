@@ -1,7 +1,7 @@
 const express = require('express')
 const passport = require('passport')
 
-require('../../middlewares/passport')
+require('../../middlewares/passport.middleware')
 
 const { uploadNone } = require('../../utils/multer.ultil')
 
@@ -24,5 +24,8 @@ router.patch('/api/auth/login', uploadNone(), validateBody(schemas.authLoginSche
 router.patch('/api/auth/change-password', uploadNone(), validateBody(schemas.authChangePasswordSchema), passport.authenticate('jwt', {
     session: false
 }), authController.changePasswordAuth)
+router.patch('/api/auth/edit-info', uploadNone(), validateBody(schemas.authEditInfoSchema), passport.authenticate('jwt', {
+    session: false
+}), authController.editInfoAuth)
 
 module.exports = router

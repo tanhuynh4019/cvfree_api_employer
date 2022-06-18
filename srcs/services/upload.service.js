@@ -37,7 +37,7 @@ const uploadAvatar = async(query, file, user, ip) => {
         await uploadModel.create(bodyUpload)
 
         //* send slack and save history
-        historyService.create({ idEmployer: editAvatarEmployer._id, content: 'Đổi ảnh đại diện!', ip, type: typeModule.HISTORY.EMPLOYER })
+        historyService.create({ idEmployer: editAvatarEmployer._id, content: 'Đổi ảnh đại diện', ip, type: typeModule.HISTORY.ACCOUNT, role: typeModule.ROLE.EMPLOYER })
         sendHistorySlack(`Nhà tuyển dụng *${editAvatarEmployer.email} - ${editAvatarEmployer.phone} - #${editAvatarEmployer._id}* vừa đổi ảnh đại diện vào lúc ${formatDate_VN(dateNow)}`)
 
         setMessage('Thêm ảnh đại diện thành công!');
