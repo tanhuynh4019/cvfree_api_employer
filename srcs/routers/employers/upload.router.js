@@ -1,5 +1,4 @@
 const express = require('express')
-const multer = require('multer')
 const passport = require('passport')
 
 require('../../middlewares/passport.middleware')

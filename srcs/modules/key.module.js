@@ -1,6 +1,8 @@
 module.exports = {
     SERVICE: {
         AUTH: 'auth',
-        UPLOAD: 'upload'
+        UPLOAD: 'upload',
+        HISTORY: 'history',
+        COMPANY: 'company',
     }
 }
