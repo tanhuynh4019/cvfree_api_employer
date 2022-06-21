@@ -161,7 +161,7 @@ const getByCompany = async(query, user, ip) => {
             return false
         }
 
-        const company = await companyModel.findOne({ idEmployer: user._id })
+        const company = await companyModel.findOne({ idEmployer: user._id }).populate('idEmployer')
 
         return company
 
