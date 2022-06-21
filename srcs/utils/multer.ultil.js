@@ -33,7 +33,6 @@ const uploadImage = (url, key) => {
 const uploadImageField = (url, keys) => {
     const storage = multer.diskStorage({
         destination: function(req, file, cb) {
-
             cb(null, url);
         },
         filename: function(req, file, cb) {
@@ -49,6 +48,10 @@ const uploadImageField = (url, keys) => {
             'image/jpg',
             'image/webp'
         ]
+
+        if (!file) {
+            return cb('Vui lòng chọn ảnh!')
+        }
 
         if (!whitelist.includes(file.mimetype)) {
             return cb('Định dạng ảnh phải là png, jpeg, jpg, webp')

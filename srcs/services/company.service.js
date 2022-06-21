@@ -1,4 +1,5 @@
 const keyModule = require('../modules/key.module')
+const { formatDate_VN } = require('../modules/format.module')
 const { INCORRECT } = require('../modules/message.module')
 const typeModule = require('../modules/type.module')
 
@@ -8,6 +9,7 @@ const employerModel = require('../models/employer.model')
 const { sendHistorySlack } = require('../utils/slack.util')
 
 const historyService = require('../services/history.service')
+const dateNow = Date.now()
 
 const create = async(body, query, files, user, ip) => {
     try {
@@ -73,6 +75,96 @@ const create = async(body, query, files, user, ip) => {
     }
 }
 
+const edit = async(body, query, params, files, user, ip) => {
+    try {
+        const arrCarrer = []
+        const arrLocation = []
+        if (body.careers) {
+
+            body.careers.split(',').forEach(arr => {
+                if (arr != '') {
+                    arrCarrer.push(arr)
+                }
+            })
+        }
+
+        if (body.locations) {
+
+            body.locations.split(',').forEach(arr => {
+                if (arr != '') {
+                    arrLocation.push(arr)
+                }
+            })
+        }
+
+
+        const { key } = query
+        const { idCompany } = params
+
+        //* validate
+        if (key != keyModule.SERVICE.COMPANY) {
+            setMessage(INCORRECT('Key'))
+            return false
+        }
+
+
+        if (!body.srcLogo && !files.srcLogo[0]) {
+            body.srcLogo = files.srcLogo[0]
+        }
+
+        if (!body.srcBanner && !files.srcBanner[0]) {
+            body.srcBanner = files.srcBanner[0]
+        }
+        body.careers = arrCarrer
+        body.locations = arrLocation
+        body.dateEdit = dateNow
+
+        const company = await companyModel.findOne({ idEmployer: user._id })
+        if (!company) {
+            setMessage('Bạn chỉ được thông tin của chính mình!')
+            return false
+        }
+
+        const edit = await companyModel.findByIdAndUpdate(idCompany, body)
+
+        //* send slack and save history
+        historyService.create({ idEmployer: user._id, content: 'Sửa thông tin công ty', ip, type: typeModule.HISTORY.WORK, role: typeModule.ROLE.EMPLOYER })
+        sendHistorySlack(`Nhà tuyển dụng *${user.email} - ${user.phone} - #${user._id}* vừa sửa thông tin công ty | ${edit.name} - ${edit._id} | vào lúc ${formatDate_VN(dateNow)}`)
+
+        setMessage('Sửa thông tin công ty thành công!')
+        return edit
+
+    } catch (error) {
+        setMessage(error.message);
+        return false
+    }
+}
+
+const getByCompany = async(query, user, ip) => {
+    try {
+
+        const { key } = query
+        //* validate
+        if (key != keyModule.SERVICE.COMPANY) {
+            setMessage(INCORRECT('Key'))
+            return false
+        }
+
+        if (!user.isActive || user.isBin) {
+            setMessage('Truy cập thất bại do tài khoản đã bị khóa!')
+            return false
+        }
+
+        const company = await companyModel.findOne({ idEmployer: user._id })
+
+        return company
+
+    } catch (error) {
+        setMessage(error.message);
+        return false
+    }
+}
+
 const getMessage = () => {
     return this.message
 }
@@ -83,5 +175,7 @@ const setMessage = (message) => {
 
 module.exports = {
     create,
+    edit,
+    getByCompany,
     getMessage
 }

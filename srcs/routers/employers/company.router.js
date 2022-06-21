@@ -21,4 +21,24 @@ router.post('/api/company', uploadImageField('srcs/uploads/images/companies', [{
     session: false
 }), companyController.createCompany)
 
+router.patch('/api/company/:idCompany', uploadImageField('srcs/uploads/images/companies', [{
+    name: 'srcLogo',
+    maxCount: 1
+}, {
+    name: 'srcBanner',
+    maxCount: 1
+}]), validateBody(schemas.companyEditSchema), passport.authenticate('jwt', {
+    session: false
+}), companyController.editCompany)
+
+router.get('/api/company/by-employer', uploadImageField('srcs/uploads/images/companies', [{
+    name: 'srcLogo',
+    maxCount: 1
+}, {
+    name: 'srcBanner',
+    maxCount: 1
+}]), passport.authenticate('jwt', {
+    session: false
+}), companyController.getByCompany)
+
 module.exports = router

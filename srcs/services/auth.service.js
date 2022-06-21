@@ -88,7 +88,21 @@ const secret = async(query, user) => {
         }
 
         //* perform
-        const { email, fullname, phone, gender, company, position, workLocation, district, accountSkype, accountZalo, coin, avatar } = user
+        const {
+            email,
+            fullname,
+            phone,
+            gender,
+            company,
+            position,
+            workLocation,
+            district,
+            accountSkype,
+            accountZalo,
+            coin,
+            avatar,
+            isCompany
+        } = user
         const showUser = {
             email,
             fullname,
@@ -101,7 +115,8 @@ const secret = async(query, user) => {
             accountSkype,
             accountZalo,
             coin,
-            avatar
+            avatar,
+            isCompany
         }
 
         return showUser
