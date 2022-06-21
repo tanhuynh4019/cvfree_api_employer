@@ -4,5 +4,6 @@ module.exports = {
         UPLOAD: 'upload',
         HISTORY: 'history',
         COMPANY: 'company',
+        JOB: 'job',
     }
 }

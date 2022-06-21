@@ -101,7 +101,9 @@ const secret = async(query, user) => {
             accountZalo,
             coin,
             avatar,
-            isCompany
+            isCompany,
+            businessPoints,
+            _id
         } = user
         const showUser = {
             email,
@@ -116,7 +118,9 @@ const secret = async(query, user) => {
             accountZalo,
             coin,
             avatar,
-            isCompany
+            isCompany,
+            businessPoints,
+            _id
         }
 
         return showUser

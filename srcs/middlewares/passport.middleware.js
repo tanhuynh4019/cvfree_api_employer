@@ -34,7 +34,7 @@ passport.use(new jwtStrategy({
     secretOrKey: JWT_SECRET
 }, async(payload, done) => {
     try {
-        const employer = await employerModel.findById(payload.sub);
+        const employer = await employerModel.findById(payload.sub)
 
         if (!employer) return done(null, false)
         if (!employer.isActive) return done(null, false)

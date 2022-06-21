@@ -2,6 +2,7 @@ const keyModule = require('../modules/key.module')
 const { formatDate_VN } = require('../modules/format.module')
 const { INCORRECT } = require('../modules/message.module')
 const typeModule = require('../modules/type.module')
+const coinModule = require('../modules/coin.module')
 
 const companyModel = require('../models/company.model')
 const employerModel = require('../models/employer.model')
@@ -9,6 +10,8 @@ const employerModel = require('../models/employer.model')
 const { sendHistorySlack } = require('../utils/slack.util')
 
 const historyService = require('../services/history.service')
+const coinService = require('../services/coin.service')
+
 const dateNow = Date.now()
 
 const create = async(body, query, files, user, ip) => {
@@ -65,6 +68,13 @@ const create = async(body, query, files, user, ip) => {
         //* send slack and save history
         historyService.create({ idEmployer: user._id, content: 'Tạo thông tin công ty', ip, type: typeModule.HISTORY.WORK, role: typeModule.ROLE.EMPLOYER })
         sendHistorySlack(`Nhà tuyển dụng *${user.email} - ${user.phone} - #${user._id}* vừa tạo thông tin công ty | ${edit.name} - ${edit._id} | vào lúc ${formatDate_VN(edit.dateCreate)}`)
+
+        const addCoin = await coinService.plusCoin(user, coinModule.JOB.CREATE_JOB, ip, `Cộng ${coinModule.JOB.CREATE_JOB} xu từ việc đăng ký thông tin công ty`, `Nhà tuyển dụng vừa được cộng ${coinModule.JOB.CREATE_JOB} xu từ việc đăng ký thông tin công ty vào lúc ${formatDate_VN(dateNow)}`)
+
+        if (!addCoin) {
+            setMessage('Lỗi giao dịch xu!')
+            return false;
+        }
 
         setMessage('Thêm thông tin công ty thành công!')
         return edit

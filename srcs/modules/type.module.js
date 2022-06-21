@@ -6,6 +6,7 @@ module.exports = {
     },
     HISTORY: {
         ACCOUNT: 1,
-        WORK: 2
+        WORK: 2,
+        COIN: 3
     }
 }

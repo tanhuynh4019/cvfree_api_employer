@@ -59,9 +59,7 @@ const schemas = {
             'number.min': 'Quy mô lớn nhất không nhỏ hơn {{#limit}} !',
             'number.max': 'Quy mô lớn nhất không vượt quá {{#limit}}!'
         }),
-        srcVideoYoutube: Joi.string().allow(null, '').pattern(new RegExp(regexModule.new.linkYoutube)).messages({
-            'string.pattern.base': 'Link intro không hợp lệ hoặc cvfree chưa hỗ trợ!',
-        }),
+        srcVideoYoutube: Joi.string().allow(null, '').messages(),
         phone: Joi.string().pattern(new RegExp(regexModule.new.phone_vn)).empty().required().messages({
             'string.pattern.base': INVALID('Số điện thoại'),
             'any.required': REQUIRED('Số điện thoại', true),
@@ -125,9 +123,7 @@ const schemas = {
             'number.min': 'Quy mô lớn nhất không nhỏ hơn {{#limit}} !',
             'number.max': 'Quy mô lớn nhất không vượt quá {{#limit}}!'
         }),
-        srcVideoYoutube: Joi.string().allow(null, '').pattern(new RegExp(regexModule.new.linkYoutube)).messages({
-            'string.pattern.base': 'Link intro không hợp lệ hoặc cvfree chưa hỗ trợ!',
-        }),
+        srcVideoYoutube: Joi.string().allow(null, '').messages(),
         phone: Joi.string().pattern(new RegExp(regexModule.new.phone_vn)).empty().required().messages({
             'string.pattern.base': INVALID('Số điện thoại'),
             'any.required': REQUIRED('Số điện thoại', true),
