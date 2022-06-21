@@ -49,10 +49,6 @@ const uploadImageField = (url, keys) => {
             'image/webp'
         ]
 
-        if (!file) {
-            return cb('Vui lòng chọn ảnh!')
-        }
-
         if (!whitelist.includes(file.mimetype)) {
             return cb('Định dạng ảnh phải là png, jpeg, jpg, webp')
         }

@@ -90,12 +90,10 @@ const schemas = {
     }),
     authLoginSchema: Joi.object().keys({
         email: Joi.string().email().empty().required().messages({
-            'string.email': INVALID('E-mail'),
             'any.required': REQUIRED('E-mail', true),
             'string.empty': EMPTY('E-mail'),
         }),
-        password: Joi.string().pattern(new RegExp(regexModule.new.password)).empty().required().messages({
-            'string.pattern.base': INVALID('Mật khẩu'),
+        password: Joi.string().empty().required().messages({
             'any.required': REQUIRED('Mật khẩu', true),
             'string.empty': EMPTY('Mật khẩu'),
         })

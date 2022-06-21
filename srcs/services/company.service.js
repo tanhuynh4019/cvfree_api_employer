@@ -107,23 +107,29 @@ const edit = async(body, query, params, files, user, ip) => {
             return false
         }
 
-
-        if (!body.srcLogo && !files.srcLogo[0]) {
-            body.srcLogo = files.srcLogo[0]
-        }
-
-        if (!body.srcBanner && !files.srcBanner[0]) {
-            body.srcBanner = files.srcBanner[0]
-        }
-        body.careers = arrCarrer
-        body.locations = arrLocation
-        body.dateEdit = dateNow
-
         const company = await companyModel.findOne({ idEmployer: user._id })
         if (!company) {
             setMessage('Bạn chỉ được thông tin của chính mình!')
             return false
         }
+
+        if (files.srcLogo) {
+            body.srcLogo = files.srcLogo[0]
+        } else {
+            body.srcLogo = company.srcLogo
+        }
+
+        if (files.srcBanner) {
+            body.srcBanner = files.srcBanner[0]
+        } else {
+            body.srcBanner = company.srcBanner
+        }
+
+
+
+        body.careers = arrCarrer
+        body.locations = arrLocation
+        body.dateEdit = dateNow
 
         const edit = await companyModel.findByIdAndUpdate(idCompany, body)
 
