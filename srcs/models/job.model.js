@@ -41,7 +41,7 @@ const jobSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    salaryfrom: {
+    salaryFrom: {
         type: Number,
         default: 0
     },
@@ -106,7 +106,7 @@ const jobSchema = mongoose.Schema({
     },
     isBrowser: {
         type: Boolean,
-        default: true
+        default: false
     },
     slug: {
         type: String,

@@ -1,5 +1,6 @@
 module.exports = {
     JOB: {
-        CREATE_JOB: 300,
+        CREATE_COMPANY: 300,
+        CREATE_JOB_MINUS: 100
     }
 }
